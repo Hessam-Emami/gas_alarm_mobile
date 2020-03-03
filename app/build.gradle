@@ -23,6 +23,15 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 }
 
 dependencies {
@@ -34,6 +43,14 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleExtVersion"
     implementation "com.google.android.material:material:$materialVersion"
+
+    // Core library
+    androidTestImplementation "androidx.test:core:$coreTestVersion"
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:runner:$runnerRulesVersion"
+    androidTestImplementation "androidx.test:rules:$runnerRulesVersion"
+
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$junitExtVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
