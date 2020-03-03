@@ -1,14 +1,15 @@
 package com.emami.android.toxicgasalarm
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.emami.android.toxicgasalarm.base.BaseActivity
 import com.emami.android.toxicgasalarm.ui.main.MainFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+    override val layoutResId: Int
+        get() = R.layout.main_activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, MainFragment.newInstance())
