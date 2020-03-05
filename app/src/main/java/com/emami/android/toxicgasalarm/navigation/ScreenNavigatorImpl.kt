@@ -10,15 +10,24 @@ class ScreenNavigatorImpl(
     @IdRes
     private val containerId: Int
 ) : ScreenNavigator {
+    private var callback: ((String) -> Unit)? = null
     override fun navigateToMainScreen() {
         MainFragment.newInstance()
-            .run { replaceFragment(this) }
+            .run {
+                replaceFragment(this, ScreenNavigator.TAG_MAIN_FRAGMENT)
+                callback?.invoke(ScreenNavigator.TAG_MAIN_FRAGMENT)
+            }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    override fun registerOnFragmentChangedListener(callback: (fragmentTitle: String) -> Unit) {
+        this.callback = callback
+    }
+
+    private fun replaceFragment(fragment: Fragment, tag: String? = null) {
         fragmentManager.beginTransaction()
-            .replace(containerId, fragment)
+            .replace(containerId, fragment, tag)
             .addToBackStack(fragment::class.java.name)
             .commit()
     }
+
 }
