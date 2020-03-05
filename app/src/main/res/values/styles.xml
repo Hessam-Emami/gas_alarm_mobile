@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Widget.ToxicGasAlarm.RoundedButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">@dimen/rounded_button_radius</item>
+    </style>
 </resources>
