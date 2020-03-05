@@ -2,4 +2,5 @@
     <string name="app_name">ToxicGasAlarm</string>
     <string name="scan">Scan</string>
     <string name="app_title">Toxic Gas Alarm</string>
+    <string name="main_title">Search Device</string>
 </resources>
