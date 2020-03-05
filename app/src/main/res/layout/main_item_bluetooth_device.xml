@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:id="@+id/main_item_device_name"
+        android:layout_width="match_parent"
+        android:textAllCaps="true"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        tools:text="Samsung TV" />
+
+</FrameLayout>

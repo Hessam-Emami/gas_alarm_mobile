@@ -3,4 +3,5 @@
     <string name="scan">Scan</string>
     <string name="app_title">Toxic Gas Alarm</string>
     <string name="main_title">Search Device</string>
+    <string name="searching_for_nearby_devices">Searching for nearby devices...</string>
 </resources>
