@@ -1,4 +1,4 @@
-package com.emami.android.toxicgasalarm
+package com.emami.android.toxicgasalarm.ui
 
 import com.emami.android.toxicgasalarm.navigation.ScreenNavigator
 

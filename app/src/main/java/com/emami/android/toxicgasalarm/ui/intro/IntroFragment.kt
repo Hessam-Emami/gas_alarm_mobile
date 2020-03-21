@@ -5,9 +5,9 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.emami.android.toxicgasalarm.MainNavigator
 import com.emami.android.toxicgasalarm.R
 import com.emami.android.toxicgasalarm.base.BaseFragment
+import com.emami.android.toxicgasalarm.ui.MainNavigator
 import kotlinx.android.synthetic.main.intro_fragment.*
 
 class IntroFragment : BaseFragment<Nothing>(Nothing::class.java), IntroNavigator {
