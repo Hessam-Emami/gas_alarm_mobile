@@ -12,8 +12,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.emami.android.toxicgasalarm.R
 import com.emami.android.toxicgasalarm.base.BaseFragment
 import com.emami.android.toxicgasalarm.ui.MainView
@@ -27,7 +30,7 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
 
     private lateinit var bluetoothHelper: BluetoothHelper
 
-    private val broadcastReceiver = BluetoothReceiver()
+    private val bluetoothBroadcastReceiver = BluetoothReceiver()
 
     override fun showProgressBar(shouldShow: Boolean) {
         val activity = requireActivity()
@@ -43,20 +46,20 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
         if (shouldRegister) {
             requireActivity().apply {
                 registerReceiver(
-                    broadcastReceiver,
+                    bluetoothBroadcastReceiver,
                     IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
                 )
                 registerReceiver(
-                    broadcastReceiver,
+                    bluetoothBroadcastReceiver,
                     IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
                 )
                 registerReceiver(
-                    broadcastReceiver,
+                    bluetoothBroadcastReceiver,
                     IntentFilter(BluetoothDevice.ACTION_FOUND)
                 )
             }
         } else {
-            requireActivity().unregisterReceiver(broadcastReceiver)
+            requireActivity().unregisterReceiver(bluetoothBroadcastReceiver)
         }
     }
 
@@ -113,6 +116,22 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
         showProgressBar(false)
     }
 
+    private val deviceSet = mutableSetOf<BluetoothDevice>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bluetoothBroadcastReceiver.deviceSetLiveData.observe(
+            viewLifecycleOwner,
+            Observer { device ->
+                device?.let {
+                    val filteredList = deviceSet.filter { it.address == device.address }
+                    if (filteredList.isEmpty()) {
+                        deviceSet.add(device)
+                        Log.d(TAG, "Device: ${device.name}");
+                    }
+                }
+            })
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.d(TAG, "MainViewModel: $viewModel")
@@ -126,6 +145,7 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
 
     inner class BluetoothReceiver : BroadcastReceiver() {
         private val TAG = "BLUETOOTH_RECEIVER"
+        val deviceSetLiveData = MutableLiveData<BluetoothDevice?>()
         override fun onReceive(p0: Context?, p1: Intent?) {
             Log.d(TAG, "onReceive: $p1");
             when (p1?.action) {
@@ -136,8 +156,10 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
                     showProgressBar(false)
                 }
                 BluetoothDevice.ACTION_FOUND -> {
-                    val device = p1.extras?.getParcelable<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    Log.d(TAG, "BluetoothDevice: ${device?.name}");
+                    p1.extras?.getParcelable<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                        ?.let { device ->
+                            deviceSetLiveData.value = device
+                        }
                 }
             }
         }
