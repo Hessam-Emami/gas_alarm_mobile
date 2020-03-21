@@ -9,4 +9,8 @@ class BluetoothHelper(bluetoothManager: BluetoothManager?) {
         bluetoothAdapter?.cancelDiscovery()
         bluetoothAdapter?.startDiscovery()
     }
+
+    fun cancel(){
+        bluetoothAdapter?.cancelDiscovery()
+    }
 }

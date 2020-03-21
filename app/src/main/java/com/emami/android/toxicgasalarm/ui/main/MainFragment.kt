@@ -17,9 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.emami.android.toxicgasalarm.R
 import com.emami.android.toxicgasalarm.base.BaseFragment
 import com.emami.android.toxicgasalarm.ui.MainView
+import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), MainView {
 
@@ -119,6 +121,22 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
     private val deviceSet = mutableSetOf<BluetoothDevice>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val recyclerItemCallback = { bluetoothDevice: BluetoothDevice ->
+            bluetoothHelper.cancel()
+        }
+
+        val recyclerAdapter = BluetoothRecyclerAdapter().also {
+            it.submitList(deviceSet.toList())
+            it.itemClickCallback = recyclerItemCallback
+        }
+        fragment_main_btn_rescan.setOnClickListener {
+            bluetoothHelper.scan()
+        }
+
+        fragment_main_rv_devices.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recyclerAdapter
+        }
         bluetoothBroadcastReceiver.deviceSetLiveData.observe(
             viewLifecycleOwner,
             Observer { device ->
@@ -126,6 +144,10 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
                     val filteredList = deviceSet.filter { it.address == device.address }
                     if (filteredList.isEmpty()) {
                         deviceSet.add(device)
+                        recyclerAdapter.run {
+                            submitList(deviceSet.toList())
+                            notifyItemInserted(deviceSet.size - 1)
+                        }
                         Log.d(TAG, "Device: ${device.name}");
                     }
                 }
@@ -150,9 +172,11 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
             Log.d(TAG, "onReceive: $p1");
             when (p1?.action) {
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    fragment_main_btn_rescan.isEnabled = false
                     showProgressBar(true)
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    fragment_main_btn_rescan.isEnabled = true
                     showProgressBar(false)
                 }
                 BluetoothDevice.ACTION_FOUND -> {
