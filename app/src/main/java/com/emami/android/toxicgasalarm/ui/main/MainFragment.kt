@@ -250,7 +250,22 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
                 val buffer = p0.obj as ByteArray
                 val message = String(buffer, 0, dataLength).trim()
                 Log.d(TAG, "IncommingMessage: $message");
-                showToast(message)
+                fragment_main_tv_current_value.text = message.trim()
+                message.toIntOrNull()?.let {
+                    if (it >= 400) {
+                        //vibrate
+                        (requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).apply {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrate(
+                                    VibrationEffect.createOneShot(
+                                        300,
+                                        VibrationEffect.DEFAULT_AMPLITUDE
+                                    )
+                                )
+                            } else vibrate(300)
+                        }
+                    }
+                }
             }
             BluetoothConnectRunnable.DEVICE_ON_DISCONNECT -> {
                 fragment_main_btn_rescan.isEnabled = true
