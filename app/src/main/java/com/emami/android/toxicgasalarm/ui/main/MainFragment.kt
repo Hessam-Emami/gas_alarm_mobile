@@ -4,7 +4,6 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -21,13 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.emami.android.toxicgasalarm.R
 import com.emami.android.toxicgasalarm.base.BaseFragment
 import com.emami.android.toxicgasalarm.ui.MainView
+import com.emami.android.toxicgasalarm.util.makeGone
 import com.emami.android.toxicgasalarm.util.makeInvisible
 import com.emami.android.toxicgasalarm.util.makeVisible
 import kotlinx.android.synthetic.main.main_fragment.*
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.util.*
+import kotlinx.android.synthetic.main.main_fragment_connected.*
 
 class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), MainView,
     Handler.Callback {
@@ -216,10 +213,14 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
 
     private fun enableConnectedMode(shouldEnable: Boolean) {
         if (shouldEnable) {
+            fragment_main_connected.makeVisible()
             fragment_main_btn_rescan.makeInvisible()
             fragment_main_rv_devices.makeInvisible()
             fragment_main_btn_cancel_connection.makeVisible()
+            fragment_main_linear_top_container.makeGone()
         } else {
+            fragment_main_linear_top_container.makeVisible()
+            fragment_main_connected.makeGone()
             fragment_main_btn_rescan.makeVisible()
             fragment_main_rv_devices.makeVisible()
             fragment_main_btn_cancel_connection.makeInvisible()
@@ -247,7 +248,7 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
             BluetoothConnectRunnable.DEVICE_DATA_READ -> {
                 val dataLength = p0.arg1
                 val buffer = p0.obj as ByteArray
-                val message = String(buffer, 0, dataLength)
+                val message = String(buffer, 0, dataLength).trim()
                 Log.d(TAG, "IncommingMessage: $message");
                 showToast(message)
             }
@@ -265,52 +266,3 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
 
 }
 
-class BluetoothConnectRunnable(
-    private val mainThreadHandler: Handler,
-    private val bluetoothDevice: BluetoothDevice
-) : Runnable {
-    private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
-        bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"))
-    }
-    private val inStream: InputStream? = mmSocket?.inputStream
-    private val outStream: OutputStream? = mmSocket?.outputStream
-    private val buffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
-
-    companion object {
-        const val DEVICE_ON_CONNECT_PROGRESS = 123123
-        const val DEVICE_ON_CONNECT_FAILED = 12312
-        const val DEVICE_ON_CONNECT_SUCCESS = 1231
-        const val DEVICE_ON_DISCONNECT = 312312
-        const val DEVICE_DATA_READ = 321321
-    }
-
-    private val TAG = "CONNECT_THREAD"
-    override fun run() {
-        Message.obtain(mainThreadHandler, DEVICE_ON_CONNECT_PROGRESS).sendToTarget()
-        try {
-            mmSocket?.connect()
-            Message.obtain(mainThreadHandler, DEVICE_ON_CONNECT_SUCCESS).sendToTarget()
-            var numBytes: Int // bytes returned from read()
-            while (true) {
-                numBytes = try {
-                    inStream!!.read(buffer)
-                } catch (e: IOException) {
-                    Log.d(TAG, "Input stream was disconnected", e)
-                    break
-                }
-                mainThreadHandler.obtainMessage(DEVICE_DATA_READ, numBytes, -1, buffer)
-                    .sendToTarget()
-            }
-        } catch (e: IOException) {
-            Message.obtain(mainThreadHandler, DEVICE_ON_CONNECT_FAILED).sendToTarget()
-        }
-    }
-
-    fun cancel() {
-        try {
-            mmSocket?.close()
-            mainThreadHandler.obtainMessage(DEVICE_ON_DISCONNECT).sendToTarget()
-        } catch (e: IOException) {
-        }
-    }
-}

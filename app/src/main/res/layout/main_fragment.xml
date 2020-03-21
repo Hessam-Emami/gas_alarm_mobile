@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-
+        android:id="@+id/fragment_main_linear_top_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_rectangle_bottom_left_rounded"
@@ -66,20 +66,29 @@
         android:id="@+id/fragment_main_btn_rescan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:layout_marginBottom="24dp"
+        android:enabled="false"
         android:text="@string/scan_again"
         app:layout_constraintBottom_toBottomOf="@+id/fragment_main_rv_devices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fragment_main_btn_cancel_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:layout_marginBottom="24dp"
         android:text="@string/disconnect"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/fragment_main_rv_devices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <include
+        android:id="@+id/fragment_main_connected"
+        layout="@layout/main_fragment_connected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
