@@ -7,10 +7,6 @@ import com.emami.android.toxicgasalarm.R
 import com.emami.android.toxicgasalarm.base.BaseFragment
 import kotlinx.android.synthetic.main.intro_fragment.*
 
-interface IntroNavigator {
-    fun navigateToMainFragment()
-}
-
 class IntroFragment : BaseFragment<Nothing>(Nothing::class.java), IntroNavigator {
     companion object {
         fun newInstance() = IntroFragment()
@@ -21,7 +17,8 @@ class IntroFragment : BaseFragment<Nothing>(Nothing::class.java), IntroNavigator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        intro_btn_scan.setOnClickListener { navigateToMainFragment() }
+        fragment_intro_btn_scan.setOnClickListener { navigateToMainFragment() }
+
     }
 
     override fun navigateToMainFragment() {

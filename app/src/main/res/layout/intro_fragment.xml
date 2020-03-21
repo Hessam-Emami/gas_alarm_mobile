@@ -19,7 +19,7 @@
         android:textColor="@android:color/white" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/intro_btn_scan"
+        android:id="@+id/fragment_intro_btn_scan"
         style="@style/Widget.ToxicGasAlarm.RoundedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
