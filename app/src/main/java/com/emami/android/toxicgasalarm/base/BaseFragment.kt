@@ -12,7 +12,7 @@ abstract class BaseFragment<T : BaseViewModel>(private val clazz: Class<T>) : Fr
     @get:LayoutRes
     protected abstract val layoutId: Int
     protected val TAG = this::class.java.name
-    internal lateinit var viewModel: T
+    internal var viewModel: T? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,7 +22,9 @@ abstract class BaseFragment<T : BaseViewModel>(private val clazz: Class<T>) : Fr
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(clazz)
+        if (clazz != Nothing::class.java) {
+            viewModel = ViewModelProvider(this).get(clazz)
+        }
     }
 
     override fun showToast(msg: String, length: Int) {

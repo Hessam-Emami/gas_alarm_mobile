@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBlue">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:fontFamily="@font/arapey_italic"
+        android:gravity="center"
+        android:text="@string/app_title"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
+        android:textColor="@android:color/white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fragment_intro_btn_scan"
+        style="@style/Widget.ToxicGasAlarm.RoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/scan"
+        android:textColor="@android:color/black"
+        app:backgroundTint="@android:color/white"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="263dp" />
+
+</FrameLayout>
