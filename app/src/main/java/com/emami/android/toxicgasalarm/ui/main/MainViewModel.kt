@@ -1,7 +1,7 @@
 package com.emami.android.toxicgasalarm.ui.main
 
-import androidx.lifecycle.ViewModel
+import com.emami.android.toxicgasalarm.base.BaseViewModel
 
-class MainViewModel : ViewModel() {
+class MainViewModel : BaseViewModel() {
     // TODO: Implement the ViewModel
 }
