@@ -251,7 +251,7 @@ class MainFragment : BaseFragment<MainViewModel>(MainViewModel::class.java), Mai
                 val message = String(buffer, 0, dataLength).trim()
                 Log.d(TAG, "IncommingMessage: $message");
                 fragment_main_tv_current_value.text = message.trim()
-                message.toIntOrNull()?.let {
+                message.substringAfterLast(' ').toIntOrNull()?.let {
                     if (it >= 400) {
                         //vibrate
                         (requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).apply {
