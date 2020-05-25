@@ -12,6 +12,10 @@ class ScreenNavigatorImpl(
     private val containerId: Int
 ) : ScreenNavigator {
 
+    override fun launchStartDestination() {
+        navigateToIntroScreen()
+    }
+
     override fun navigateToMainScreen() {
         MainFragment.newInstance()
             .run {

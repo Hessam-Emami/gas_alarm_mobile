@@ -6,6 +6,7 @@ interface ScreenNavigator {
         const val TAG_MAIN_FRAGMENT = "main-fragment-tag"
     }
 
+    fun launchStartDestination()
     fun navigateToMainScreen()
     fun navigateToIntroScreen()
 }
